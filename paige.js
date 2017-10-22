@@ -1,13 +1,7 @@
 var request = require('request');
 var moment = require('moment-timezone');
 
-var test = function(context, cb, value) {
-  cb(null, { text: value } );
-}
-
 var joke = function(context, cb) {
-  var result ='';
-  var returnMsg = '';
   var jokes = [
     {
       joke: "What's the best time to go to the dentist?",
@@ -66,24 +60,24 @@ var joke = function(context, cb) {
       punchline: "Because they're shellfish."
     }
   ];
-  var joke, jokeIdx;
+  var jokeIdx;
+  var returnMsg = '';
 
   var needsResponse = context.body.text.split(' ')[2];
   switch(needsResponse) {
     case undefined:
       jokeIdx = Math.floor(Math.random()*jokes.length);
-      joke = jokes[jokeIdx].joke;
 
       returnMsg += context.body.trigger_word + ' joke '+ jokeIdx + ' \n';
-      returnMsg += joke;
+      returnMsg += jokes[jokeIdx].joke;
 
       cb(null, { text: returnMsg } );
       break;
 
     default:
       jokeIdx = needsResponse;
-      console.log(jokeIdx);
-      setTimeout(function() {cb(null, { text: jokes[jokeIdx].punchline} );}, 4000);
+      returnMsg += jokes[jokeIdx].punchline
+      setTimeout(function() {cb(null, { text: returnMsg } );}, 4000);
       break;
   }
 }
