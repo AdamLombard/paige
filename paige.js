@@ -1,6 +1,23 @@
 var request = require('request');
 var moment = require('moment-timezone');
 
+var help = function(context, cb) {
+  var returnMsg = "Hi! I'm Paige! \n"
+  returnMsg += "To get my help, type `paige <command> <details>`. \n"
+  returnMsg += "\n"
+  returnMsg += "Here's the commands I know:"
+  returnMsg += "\n\t"
+  returnMsg += "help"
+  returnMsg += "\n\t"
+  returnMsg += "joke"
+  returnMsg += "\n\t"
+  returnMsg += "weather <zipCode>"
+  returnMsg += "\n"
+  returnMsg += "\n"
+  returnMsg += "So, if you type `paige joke`, I'll tell you one! Try it! :smile:"
+  cb(null, { text: returnMsg } );
+}
+
 var joke = function(context, cb) {
   var jokes = [
     {
@@ -164,16 +181,19 @@ module.exports = function(context, cb) {
   var command = context.body.text.split(' ')[1];
 
   switch (command) {
-    case 'test':
-      test(context, cb, "hello")
+    case 'help':
+      help(context, cb);
       break;
 
     case 'weather':
-      weather(context, cb)
+      weather(context, cb);
       break;
 
     case 'joke':
       joke(context, cb);
       break;
+
+    default:
+      help(context, cb);
   }
 };
