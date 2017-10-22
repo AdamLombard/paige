@@ -1,13 +1,104 @@
 var request = require('request');
 var moment = require('moment-timezone');
 
+var test = function(context, cb, value) {
+  cb(null, { text: value } );
+}
+
+var joke = function(context, cb, data) {
+  var result ='';
+  var returnMsg = '';
+  var jokes = [
+    {
+      joke: "What's the best time to go to the dentist?",
+      punchline: "Tooth-hurty."
+    },
+    {
+      joke: "Did you hear about the guy who invented Lifesavers?",
+      punchline: "I hear he made a mint."
+    },
+    {
+      joke: "How do you make a Kleenex dance?",
+      punchline: "Put a little boogie in it."
+    },
+    {
+      joke: "Why don't skeletons ever go trick-or-treating?",
+      punchline: "Because they have no body to go with."
+    },
+    {
+      joke: "Did you hear about the new restaurant on the moon?",
+      punchline: "Great food, no atmosphere."
+    },
+    {
+      joke: "Don't trust atoms.",
+      punchline: "They literally make up everything."
+    },
+    {
+      joke: "What did Mrs. Buffalo say to her youngest boy when he left for college?",
+      punchline: "Bison."
+    },
+    {
+      joke: "Why is it impossible to have a nose 12 inches long?",
+      punchline: "Because it would be a foot."
+    },
+    {
+      joke: "Did you hear Scarecrow won an award?!",
+      punchline: "Yeah. He was out standing in his field."
+    },
+    {
+      joke: "Did you hear Grape got stepped on?",
+      punchline: "Yeah. He's okay, though. He just let out a little wine."
+    },
+    {
+      joke: "I hate jokes about german sausage.",
+      punchline: "They are the wurst."
+    },
+    {
+      joke: "Last night I dreamt I was a muffler.",
+      punchline: "I woke up exhausted."
+    },
+    {
+      joke: "Why can't bycicles stand on their own?",
+      punchline: "They're just two tired."
+    },
+    {
+      joke: "Why don't crabs like to share?",
+      punchline: "Because they're shellfish."
+    }
+  ];
+  var joke, jokeIdx;
+
+  var needsResponse = context.body.text.split(' ')[2];
+  switch(needsResponse) {
+    case undefined:
+      jokeIdx = Math.floor(Math.random()*jokes.length);
+      joke = jokes[jokeIdx].joke;
+
+      returnMsg += context.body.trigger_word + ' joke '+ jokeIdx + ' \n';
+      returnMsg += joke;
+
+      cb(null, { text: returnMsg } );
+      break;
+
+    default:
+      jokeIdx = needsResponse;
+      console.log(jokeIdx);
+      setTimeout(function() {cb(null, { text: jokes[jokeIdx].punchline} );}, 4000);
+      break;
+  }
+}
+
 module.exports = function(context, cb) {
   var command = context.body.text.split(' ')[1];
   var result = '';
   var returnMsg = '';
 
   switch (command) {
-    case 'weather':
+    case 'test':
+      test(context, cb, "hello")
+      break;
+
+      case 'weather':
       var location = context.body.text.split(' ')[2];
       var weatherAPI = context.secrets.weatherURL
                 + 'forecast?'
@@ -87,85 +178,7 @@ module.exports = function(context, cb) {
       break;
 
     case 'joke':
-      var jokes = [
-          {
-            joke: "What's the best time to go to the dentist?",
-            punchline: "Tooth-hurty."
-          },
-          {
-            joke: "Did you hear about the guy who invented Lifesavers?",
-            punchline: "I hear he made a mint."
-          },
-          {
-            joke: "How do you make a Kleenex dance?",
-            punchline: "Put a little boogie in it."
-          },
-          {
-            joke: "Why don't skeletons ever go trick-or-treating?",
-            punchline: "Because they have no body to go with."
-          },
-          {
-            joke: "Did you hear about the new restaurant on the moon?",
-            punchline: "Great food, no atmosphere."
-          },
-          {
-            joke: "Don't trust atoms.",
-            punchline: "They literally make up everything."
-          },
-          {
-            joke: "What did Mrs. Buffalo say to her youngest boy when he left for college?",
-            punchline: "Bison."
-          },
-          {
-            joke: "Why is it impossible to have a nose 12 inches long?",
-            punchline: "Because it would be a foot."
-          },
-          {
-            joke: "Did you hear Scarecrow won an award?!",
-            punchline: "Yeah. He was out standing in his field."
-          },
-          {
-            joke: "Did you hear Grape got stepped on?",
-            punchline: "Yeah. He's okay, though. He just let out a little wine."
-          },
-          {
-            joke: "I hate jokes about german sausage.",
-            punchline: "They are the wurst."
-          },
-          {
-            joke: "Last night I dreamt I was a muffler.",
-            punchline: "I woke up exhausted."
-          },
-          {
-            joke: "Why can't bycicles stand on their own?",
-            punchline: "They're just two tired."
-          },
-          {
-            joke: "Why don't crabs like to share?",
-            punchline: "Because they're shellfish."
-          }
-        ];
-        
-      var joke, jokeIdx;
-
-      var needsResponse = context.body.text.split(' ')[2];
-      switch(needsResponse) {
-        case undefined:
-          jokeIdx = Math.floor(Math.random()*jokes.length);
-          joke = jokes[jokeIdx].joke;
-
-          returnMsg += context.body.trigger_word + ' joke '+ jokeIdx + ' \n';
-          returnMsg += joke;
-
-          cb(null, { text: returnMsg } );
-          break;
-
-        default:
-          jokeIdx = needsResponse;
-          console.log(jokeIdx);
-          setTimeout(function() {cb(null, { text: jokes[jokeIdx].punchline} );}, 4000);
-          break;
-      }
+      joke(context, cb);
       break;
   }
 };
