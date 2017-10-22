@@ -83,9 +83,6 @@ var joke = function(context, cb) {
 }
 
 var weather = function(context, cb) {
-  console.log("in the function now!");
-  var result = '';
-  var returnMsg = '';
   var location = context.body.text.split(' ')[2];
   var weatherAPI = context.secrets.weatherURL
             + 'forecast?'
@@ -97,7 +94,7 @@ var weather = function(context, cb) {
       console.log(error);
       cb(null, {text: "Hmm. That didn't work..."} );
     } else {
-      var result = JSON.parse(body);
+      var weatherData = JSON.parse(body);
 
       var icons = {
         "d": ":cityscape:",
@@ -140,11 +137,11 @@ var weather = function(context, cb) {
         "50n": ":fog:"
       };
 
-      var forecasts = result.list;
-      returnMsg = "Here's the weather for the next 24 hours in " + result.city.name + "!";
+      var forecasts = weatherData.list;
+      var returnMsg = "Here's the weather for the next 24 hours in ";
+      returnMsg += weatherData.city.name + "!";
       for (var i = 0; i <= 8; i ++) {
         var forecast = forecasts[i];
-        var nightOrDay = forecast.weather[0].icon.split("")[2];
         var weatherIconCode = forecast.weather[0].icon;
         var cTemp = (forecast.main.temp - 273).toFixed(0);
         var fTemp = ((1.8 * cTemp) + 32).toFixed(0);
@@ -153,7 +150,6 @@ var weather = function(context, cb) {
 
         returnMsg += "\n\t";
         returnMsg += dayAndTime;
-        // returnMsg += " - " + icons[nightOrDay];
         returnMsg += "\n\t\t";
         returnMsg += icons[weatherIconCode] + "\t";
         returnMsg += cTemp + "°C (" + fTemp +"°F) with " + weatherDescription;
