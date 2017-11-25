@@ -1,25 +1,28 @@
-var request = require('request');
-var moment = require('moment-timezone');
+"use strict";
 
-var help = function(context, cb) {
-  var returnMsg = "Hi! I'm Paige! \n"
-  returnMsg += "To get my help, type `paige <command> <details>`. \n"
-  returnMsg += "\n"
-  returnMsg += "Here's the commands I know:"
-  returnMsg += "\n\t"
-  returnMsg += "help"
-  returnMsg += "\n\t"
-  returnMsg += "joke"
-  returnMsg += "\n\t"
-  returnMsg += "weather <zipCode>"
-  returnMsg += "\n"
-  returnMsg += "\n"
-  returnMsg += "So, if you type `paige joke`, I'll tell you one! Try it! :smile:"
+const REQUEST = require('request');
+const MOMENT = require('moment-timezone');
+
+let help = (context, cb) => {
+  let returnMsg = "";
+  returnMsg  = "Hi! I'm Paige! \n";
+  returnMsg += "To get my help, type `paige <command> <details>`. \n";
+  returnMsg += "\n";
+  returnMsg += "Here are the commands I know:";
+  returnMsg += "\n\t";
+  returnMsg += "help";
+  returnMsg += "\n\t";
+  returnMsg += "joke";
+  returnMsg += "\n\t";
+  returnMsg += "weather <zipCode>";
+  returnMsg += "\n";
+  returnMsg += "\n";
+  returnMsg += "So, if you type `paige joke`, I'll tell you one! Try it! :smile:";
   cb(null, { text: returnMsg } );
-}
+};
 
-var joke = function(context, cb) {
-  var jokes = [
+let joke = (context, cb) => {
+  let jokes = [
     {
       joke: "What's the best time to go to the dentist?",
       punchline: "Tooth-hurty."
@@ -77,10 +80,11 @@ var joke = function(context, cb) {
       punchline: "Because they're shellfish."
     }
   ];
-  var jokeIdx;
-  var returnMsg = '';
+ 
+  let jokeIdx;
+  let returnMsg = '';
 
-  var needsResponse = context.body.text.split(' ')[2];
+  let needsResponse = context.body.text.split(' ')[2];
   switch(needsResponse) {
     case undefined:
       jokeIdx = Math.floor(Math.random()*jokes.length);
@@ -93,20 +97,19 @@ var joke = function(context, cb) {
 
     default:
       jokeIdx = needsResponse;
-      returnMsg += jokes[jokeIdx].punchline + ' :laughing:'
-      setTimeout(function() {cb(null, { text: returnMsg } );}, 4000);
+      returnMsg += jokes[jokeIdx].punchline + ' :laughing:';
+      setTimeout( () => {cb(null, { text: returnMsg });}, 4000);
       break;
   }
-}
-
-var weather = function(context, cb) {
-  var location = context.body.text.split(' ')[2];
-  var weatherAPI = context.secrets.weatherURL
+};
+let weather = (context, cb) => {
+  let location = context.body.text.split(' ')[2];
+  let weatherAPI = context.secrets.weatherURL
             + 'forecast?'
             + 'zip=' + location
             + '&appid=' + context.secrets.weatherToken;
 
-  request.get(weatherAPI, function (error, res, body) {
+  REQUEST.get(weatherAPI, (error, res, body) => {
     if (error) {
       console.log(error);
       cb(null, {text: "Hmm. That didn't work..."} );
@@ -154,16 +157,16 @@ var weather = function(context, cb) {
         "50n": ":fog:"
       };
 
-      var forecasts = weatherData.list;
-      var returnMsg = "Here's the weather for the next 24 hours in ";
+      let forecasts = weatherData.list;
+      let returnMsg = "Here's the weather for the next 24 hours in ";
       returnMsg += weatherData.city.name + "!";
-      for (var i = 0; i <= 8; i ++) {
-        var forecast = forecasts[i];
-        var weatherIconCode = forecast.weather[0].icon;
-        var cTemp = (forecast.main.temp - 273).toFixed(0);
-        var fTemp = ((1.8 * cTemp) + 32).toFixed(0);
-        var dayAndTime = moment.tz(forecast.dt * 1000, 'America/Los_Angeles').format('ddd h:mm a');
-        var weatherDescription = forecast.weather[0].description;
+      for (let i = 0; i <= 8; i ++) {
+        let forecast = forecasts[i];
+        let weatherIconCode = forecast.weather[0].icon;
+        let cTemp = (forecast.main.temp - 273).toFixed(0);
+        let fTemp = ((1.8 * cTemp) + 32).toFixed(0);
+        let dayAndTime = MOMENT.tz(forecast.dt * 1000, 'America/Los_Angeles').format('ddd h:mm a');
+        let weatherDescription = forecast.weather[0].description;
 
         returnMsg += "\n\t";
         returnMsg += dayAndTime;
@@ -175,10 +178,10 @@ var weather = function(context, cb) {
       cb(null, { text: returnMsg } );
     }
   });
-}
+};
 
-module.exports = function(context, cb) {
-  var command = context.body.text.split(' ')[1];
+module.exports = (context, cb) => {
+  let command = context.body.text.split(' ')[1];
 
   switch (command) {
     case 'help':
