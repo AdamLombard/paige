@@ -93,7 +93,7 @@ var joke = function(context, cb) {
 
     default:
       jokeIdx = needsResponse;
-      returnMsg += jokes[jokeIdx].punchline
+      returnMsg += jokes[jokeIdx].punchline + ' :laughing:'
       setTimeout(function() {cb(null, { text: returnMsg } );}, 4000);
       break;
   }
