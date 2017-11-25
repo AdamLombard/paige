@@ -18,7 +18,7 @@ let help = (context, cb) => {
   returnMsg += "\n";
   returnMsg += "\n";
   returnMsg += "So, if you type `paige joke`, I'll tell you one! Try it! :smile:";
-  cb(null, { text: returnMsg } );
+  cb(null, { text: returnMsg });
 };
 
 let joke = (context, cb) => {
@@ -98,7 +98,7 @@ let joke = (context, cb) => {
     default:
       jokeIdx = needsResponse;
       returnMsg += jokes[jokeIdx].punchline + ' :laughing:';
-      setTimeout( () => {cb(null, { text: returnMsg });}, 4000);
+      setTimeout(() => {cb(null, { text: returnMsg })}, 4000);
       break;
   }
 };
@@ -175,7 +175,7 @@ let weather = (context, cb) => {
         returnMsg += cTemp + "°C (" + fTemp +"°F) with " + weatherDescription;
       }
 
-      cb(null, { text: returnMsg } );
+      cb(null, { text: returnMsg });
     }
   });
 };
