@@ -95,6 +95,27 @@ const JOKES = [
   }
 ];
 
+const COMMANDS = [
+  {
+    command: "convert"
+  },
+  {
+    command: "help"
+  },
+  {
+    command: "joke"
+  },
+  {
+    command: "kitten"
+  },
+  {
+    command: "roll"
+  },
+  {
+    command: "weather"
+  }
+];
+
 let hashedStr = (s) => {
   let hashedStr = '',
       char;
@@ -138,12 +159,11 @@ let help = (context, cb) => {
   returnMsg += "To get my help, type `paige <command> <details>`." + NEWLINE;
   returnMsg += NEWLINE;
   returnMsg += "Here are the commands I know:" + NEWLINE;
-  returnMsg += TAB + "convert" + NEWLINE;
-  returnMsg += TAB + "help" + NEWLINE;
-  returnMsg += TAB + "joke" + NEWLINE;
-  returnMsg += TAB + "kitten" + NEWLINE;
-  returnMsg += TAB + "roll" + NEWLINE;
-  returnMsg += TAB + "weather" + NEWLINE;
+
+  for (let command of COMMANDS) {
+    returnMsg += TAB + command.command + NEWLINE;
+  }
+
   returnMsg += NEWLINE;
   returnMsg += "So, if you type `paige joke`, I'll tell you one! Try it! :smile:";
 
