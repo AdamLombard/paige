@@ -5,7 +5,7 @@ const MOMENT = require('moment-timezone');
 
 let help = (context, cb) => {
   let returnMsg = "";
-  returnMsg  = "Hi! I'm Paige! \n";
+  returnMsg  = "Hi! I'm Paige! \n\t";
   returnMsg += "To get my help, type `paige <command> <details>`. \n";
   returnMsg += "\n";
   returnMsg += "Here are the commands I know:";
@@ -18,6 +18,7 @@ let help = (context, cb) => {
   returnMsg += "\n";
   returnMsg += "\n";
   returnMsg += "So, if you type `paige joke`, I'll tell you one! Try it! :smile:";
+
   cb(null, { text: returnMsg });
 };
 
@@ -98,10 +99,12 @@ let joke = (context, cb) => {
     default:
       jokeIdx = needsResponse;
       returnMsg += jokes[jokeIdx].punchline + ' :laughing:';
+
       setTimeout(() => {cb(null, { text: returnMsg })}, 4000);
       break;
   }
 };
+
 let weather = (context, cb) => {
   let location = context.body.text.split(' ')[2];
   let weatherAPI = context.secrets.weatherURL
