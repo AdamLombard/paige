@@ -114,9 +114,9 @@ let weather = (context, cb) => {
       console.log(error);
       cb(null, {text: "Hmm. That didn't work..."} );
     } else {
-      var weatherData = JSON.parse(body);
+      let weatherData = JSON.parse(body);
 
-      var icons = {
+      let icons = {
         "d": ":cityscape:",
         "n": ":night_with_stars:",
         
@@ -181,7 +181,24 @@ let weather = (context, cb) => {
 };
 
 let convert = (context, cb) => {
-  cb(null, { text: conversionRequest });
+  let conversionRequest = context.body.text.split(' ').slice(2).join('+');
+  let conversionAPI = context.secrets.conversionURL
+    + 'input=' + conversionRequest
+    + '&format=plaintext'
+    + '&output=JSON'
+    + '&appid=' + context.secrets.conversionToken;
+    
+  REQUEST.get(conversionAPI, (error, res, body) => {
+    if (error) {
+      console.log(error);
+      cb(null, {text: "Sorry! I don't know how to do that..."} );
+    } else { 
+      let conversionData = JSON.parse(body);
+      let returnMsg = conversionData.queryresult.pods.find(o => (o.id === 'Result')).subpods[0].plaintext;
+    
+      cb(null, { text: returnMsg });
+    }
+  });
 };
 
 module.exports = (context, cb) => {
