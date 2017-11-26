@@ -160,7 +160,23 @@ let kitten = (context, cb) => {
 };
 
 let roll = (context, cb) => {
-  cb(null, { text: "roll it!" });
+  let 
+    rollParams = context.body.text.split(' ').slice(2),
+    numOfDice = rollParams[0],
+    typeOfDie = rollParams[1],
+    rolledDice = [];
+
+  if (numOfDice[0].toLowerCase() === 'd') {
+    typeOfDie = numOfDice;
+    numOfDice = 1;
+  }
+  
+  let sizeOfDie = typeOfDie.slice(1);
+  for (let i = 0; i < numOfDice; i++) {
+    rolledDice.push(' ' + Math.ceil(Math.random() * sizeOfDie));
+  }
+
+  cb(null, { text: rolledDice.toString() });
 };
 
 let weather = (context, cb) => {
