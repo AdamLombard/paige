@@ -7,11 +7,11 @@ const UUID = require('uuid');
 let hashedStr = (s) => {
   let hashedStr = '',
       char;
-      
+
   for (char of s) {
     hashedStr += char.charCodeAt();
   }
-  
+
   return hashedStr;
 };
 
@@ -159,6 +159,10 @@ let kitten = (context, cb) => {
   cb(null, { text: kittenAPI });
 };
 
+let roll = (context, cb) => {
+  cb(null, { text: "roll it!" });
+};
+
 let weather = (context, cb) => {
   let location = context.body.text.split(' ')[2];
   let weatherAPI = context.secrets.weatherURL
@@ -255,6 +259,10 @@ module.exports = (context, cb) => {
 
     case 'kitten':
       kitten(context, cb);
+      break;
+
+    case 'roll':
+      roll(context, cb);
       break;
 
     case 'weather':
