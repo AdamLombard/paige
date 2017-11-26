@@ -4,6 +4,65 @@ const REQUEST = require('request');
 const MOMENT = require('moment-timezone');
 const UUID = require('uuid');
 
+const JOKES = [
+  {
+    joke: "What's the best time to go to the dentist?",
+    punchline: "Tooth-hurty."
+  },
+  {
+    joke: "Did you hear about the guy who invented Lifesavers?",
+    punchline: "I hear he made a mint."
+  },
+  {
+    joke: "How do you make a Kleenex dance?",
+    punchline: "Put a little boogie in it."
+  },
+  {
+    joke: "Why don't skeletons ever go trick-or-treating?",
+    punchline: "Because they have no body to go with."
+  },
+  {
+    joke: "Did you hear about the new restaurant on the moon?",
+    punchline: "Great food, no atmosphere."
+  },
+  {
+    joke: "Don't trust atoms.",
+    punchline: "They literally make up everything."
+  },
+  {
+    joke: "What did Mrs. Buffalo say to her youngest boy when he left for college?",
+    punchline: "Bison."
+  },
+  {
+    joke: "Why is it impossible to have a nose 12 inches long?",
+    punchline: "Because it would be a foot."
+  },
+  {
+    joke: "Did you hear Scarecrow won an award?!",
+    punchline: "Yeah. He was out standing in his field."
+  },
+  {
+    joke: "Did you hear Grape got stepped on?",
+    punchline: "Yeah. He's okay, though. He just let out a little wine."
+  },
+  {
+    joke: "I hate jokes about german sausage.",
+    punchline: "They are the wurst."
+  },
+  {
+    joke: "Last night I dreamt I was a muffler.",
+    punchline: "I woke up exhausted."
+  },
+  {
+    joke: "Why can't bycicles stand on their own?",
+    punchline: "They're just two tired."
+  },
+  {
+    joke: "Why don't crabs like to share?",
+    punchline: "Because they're shellfish."
+  }
+];
+
 let hashedStr = (s) => {
   let hashedStr = '',
       char;
@@ -60,82 +119,23 @@ let help = (context, cb) => {
 };
 
 let joke = (context, cb) => {
-  let jokes = [
-    {
-      joke: "What's the best time to go to the dentist?",
-      punchline: "Tooth-hurty."
-    },
-    {
-      joke: "Did you hear about the guy who invented Lifesavers?",
-      punchline: "I hear he made a mint."
-    },
-    {
-      joke: "How do you make a Kleenex dance?",
-      punchline: "Put a little boogie in it."
-    },
-    {
-      joke: "Why don't skeletons ever go trick-or-treating?",
-      punchline: "Because they have no body to go with."
-    },
-    {
-      joke: "Did you hear about the new restaurant on the moon?",
-      punchline: "Great food, no atmosphere."
-    },
-    {
-      joke: "Don't trust atoms.",
-      punchline: "They literally make up everything."
-    },
-    {
-      joke: "What did Mrs. Buffalo say to her youngest boy when he left for college?",
-      punchline: "Bison."
-    },
-    {
-      joke: "Why is it impossible to have a nose 12 inches long?",
-      punchline: "Because it would be a foot."
-    },
-    {
-      joke: "Did you hear Scarecrow won an award?!",
-      punchline: "Yeah. He was out standing in his field."
-    },
-    {
-      joke: "Did you hear Grape got stepped on?",
-      punchline: "Yeah. He's okay, though. He just let out a little wine."
-    },
-    {
-      joke: "I hate jokes about german sausage.",
-      punchline: "They are the wurst."
-    },
-    {
-      joke: "Last night I dreamt I was a muffler.",
-      punchline: "I woke up exhausted."
-    },
-    {
-      joke: "Why can't bycicles stand on their own?",
-      punchline: "They're just two tired."
-    },
-    {
-      joke: "Why don't crabs like to share?",
-      punchline: "Because they're shellfish."
-    }
-  ];
- 
   let jokeIdx;
   let returnMsg = '';
 
   let needsResponse = context.body.text.split(' ')[2];
   switch(needsResponse) {
     case undefined:
-      jokeIdx = Math.floor(Math.random()*jokes.length);
+      jokeIdx = Math.floor(Math.random()*JOKES.length);
 
       returnMsg += context.body.trigger_word + ' joke '+ jokeIdx + ' \n';
-      returnMsg += jokes[jokeIdx].joke;
+      returnMsg += JOKES[jokeIdx].joke;
 
       cb(null, { text: returnMsg } );
       break;
 
     default:
       jokeIdx = needsResponse;
-      returnMsg += jokes[jokeIdx].punchline + ' :laughing:';
+      returnMsg += JOKES[jokeIdx].punchline + ' :laughing:';
 
       setTimeout(() => {cb(null, { text: returnMsg })}, 4000);
       break;
