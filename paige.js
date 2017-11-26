@@ -3,6 +3,27 @@
 const REQUEST = require('request');
 const MOMENT = require('moment-timezone');
 
+let convert = (context, cb) => {
+  let conversionRequest = context.body.text.split(' ').slice(2).join('+');
+  let conversionAPI = context.secrets.conversionURL
+    + 'input=' + conversionRequest
+    + '&format=plaintext'
+    + '&output=JSON'
+    + '&appid=' + context.secrets.conversionToken;
+    
+  REQUEST.get(conversionAPI, (error, res, body) => {
+    if (error) {
+      console.log(error);
+      cb(null, {text: "Sorry! I don't know how to do that..."} );
+    } else { 
+      let conversionData = JSON.parse(body);
+      let returnMsg = conversionData.queryresult.pods.find(o => (o.id === 'Result')).subpods[0].plaintext;
+    
+      cb(null, { text: returnMsg });
+    }
+  });
+};
+
 let help = (context, cb) => {
   let returnMsg = "";
   returnMsg  = "Hi! I'm Paige! \n\t";
@@ -178,27 +199,6 @@ let weather = (context, cb) => {
         returnMsg += cTemp + "°C (" + fTemp +"°F) with " + weatherDescription;
       }
 
-      cb(null, { text: returnMsg });
-    }
-  });
-};
-
-let convert = (context, cb) => {
-  let conversionRequest = context.body.text.split(' ').slice(2).join('+');
-  let conversionAPI = context.secrets.conversionURL
-    + 'input=' + conversionRequest
-    + '&format=plaintext'
-    + '&output=JSON'
-    + '&appid=' + context.secrets.conversionToken;
-    
-  REQUEST.get(conversionAPI, (error, res, body) => {
-    if (error) {
-      console.log(error);
-      cb(null, {text: "Sorry! I don't know how to do that..."} );
-    } else { 
-      let conversionData = JSON.parse(body);
-      let returnMsg = conversionData.queryresult.pods.find(o => (o.id === 'Result')).subpods[0].plaintext;
-    
       cb(null, { text: returnMsg });
     }
   });
