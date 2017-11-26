@@ -37,22 +37,23 @@ let convert = (context, cb) => {
 };
 
 let help = (context, cb) => {
+  const 
+    NEWLINE = "\n",
+    TAB = "\t";
+
   let returnMsg = "";
-  returnMsg  = "Hi! I'm Paige! \n";
-  returnMsg += "\n";
-  returnMsg += "To get my help, type `paige <command> <details>`. \n";
-  returnMsg += "\n";
-  returnMsg += "Here are the commands I know:";
-  returnMsg += "\n\t";
-  returnMsg += "convert";
-  returnMsg += "\n\t";
-  returnMsg += "help";
-  returnMsg += "\n\t";
-  returnMsg += "joke";
-  returnMsg += "\n\t";
-  returnMsg += "weather <zipCode>";
-  returnMsg += "\n";
-  returnMsg += "\n";
+  returnMsg  = "Hi! I'm Paige!" + NEWLINE;
+  returnMsg += NEWLINE;
+  returnMsg += "To get my help, type `paige <command> <details>`." + NEWLINE;
+  returnMsg += NEWLINE;
+  returnMsg += "Here are the commands I know:" + NEWLINE;
+  returnMsg += TAB + "convert" + NEWLINE;
+  returnMsg += TAB + "help" + NEWLINE;
+  returnMsg += TAB + "joke" + NEWLINE;
+  returnMsg += TAB + "kitten" + NEWLINE;
+  returnMsg += TAB + "roll" + NEWLINE;
+  returnMsg += TAB + "weather" + NEWLINE;
+  returnMsg += NEWLINE;
   returnMsg += "So, if you type `paige joke`, I'll tell you one! Try it! :smile:";
 
   cb(null, { text: returnMsg });
