@@ -26,7 +26,8 @@ let convert = (context, cb) => {
 
 let help = (context, cb) => {
   let returnMsg = "";
-  returnMsg  = "Hi! I'm Paige! \n\t";
+  returnMsg  = "Hi! I'm Paige! \n";
+  returnMsg += "\n";
   returnMsg += "To get my help, type `paige <command> <details>`. \n";
   returnMsg += "\n";
   returnMsg += "Here are the commands I know:";
@@ -128,6 +129,10 @@ let joke = (context, cb) => {
   }
 };
 
+let kitten = (context, cb) => {
+  cb(null, { text: "kitten" });
+}
+
 let weather = (context, cb) => {
   let location = context.body.text.split(' ')[2];
   let weatherAPI = context.secrets.weatherURL
@@ -220,6 +225,10 @@ module.exports = (context, cb) => {
 
     case 'joke':
       joke(context, cb);
+      break;
+
+    case 'kitten':
+      kitten(context, cb);
       break;
 
     case 'weather':
