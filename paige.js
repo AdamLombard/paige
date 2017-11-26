@@ -2,6 +2,18 @@
 
 const REQUEST = require('request');
 const MOMENT = require('moment-timezone');
+const UUID = require('uuid');
+
+let hashedStr = (s) => {
+  let hashedStr = '',
+      char;
+      
+  for (char of s) {
+    hashedStr += char.charCodeAt();
+  }
+  
+  return hashedStr;
+};
 
 let convert = (context, cb) => {
   let conversionRequest = context.body.text.split(' ').slice(2).join('+');
@@ -130,8 +142,22 @@ let joke = (context, cb) => {
 };
 
 let kitten = (context, cb) => {
-  cb(null, { text: "kitten" });
-}
+  let kittenAPI,
+      kittenID,
+      seedWord = context.body.text.split(' ')[2];
+  
+  if (seedWord) {
+    kittenID = hashedStr(seedWord);
+  } else {
+    kittenID = UUID();
+  }
+  
+  kittenAPI = context.secrets.kittenURL
+    + kittenID + '.png?'
+    + 'set=set4';
+    
+  cb(null, { text: kittenAPI });
+};
 
 let weather = (context, cb) => {
   let location = context.body.text.split(' ')[2];
