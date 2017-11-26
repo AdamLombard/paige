@@ -105,9 +105,9 @@ let joke = (context, cb) => {
 let weather = (context, cb) => {
   let location = context.body.text.split(' ')[2];
   let weatherAPI = context.secrets.weatherURL
-            + 'forecast?'
-            + 'zip=' + location
-            + '&appid=' + context.secrets.weatherToken;
+    + 'forecast?'
+    + 'zip=' + location
+    + '&appid=' + context.secrets.weatherToken;
 
   REQUEST.get(weatherAPI, (error, res, body) => {
     if (error) {
@@ -180,20 +180,28 @@ let weather = (context, cb) => {
   });
 };
 
+let convert = (context, cb) => {
+  cb(null, { text: conversionRequest });
+};
+
 module.exports = (context, cb) => {
   let command = context.body.text.split(' ')[1];
 
   switch (command) {
+    case 'convert':
+      convert(context, cb);
+      break;
+
     case 'help':
       help(context, cb);
       break;
 
-    case 'weather':
-      weather(context, cb);
-      break;
-
     case 'joke':
       joke(context, cb);
+      break;
+
+    case 'weather':
+      weather(context, cb);
       break;
 
     default:
