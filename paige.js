@@ -60,6 +60,38 @@ const JOKES = [
   {
     joke: "Why don't crabs like to share?",
     punchline: "Because they're shellfish."
+  },
+  {
+    joke: "What do you call fake spaghetti?",
+    punchline: "Impasta!"
+  },
+  {
+    joke: "What do you call a pony with a sore throat?",
+    punchline: "A little horse."
+  },
+  {
+    joke: "What do you call cheese that isn't yours?",
+    punchline: "Nacho cheese."
+  },
+  {
+    joke: "Never get a hair cut.",
+    punchline: "If you're gonna spend money, you should get them all cut at once."
+  },
+  {
+    joke: "What does an annoying pepper do?",
+    punchline: "It gets jalapeño face."
+  },
+  {
+    joke: "Wanna hear a joke about paper?",
+    punchline: "Nevermind. It's tearable."
+  },
+  {
+    joke: "What does an annoying pepper do?",
+    punchline: "It gets jalapeño face."
+  },
+  {
+    joke: "What's the difference between a short-wearing unicyclist and suit-wearing bicyclist?",
+    punchline: "Attire."
   }
 ];
 
