@@ -31,6 +31,8 @@ let help = (context, cb) => {
   returnMsg += "\n";
   returnMsg += "Here are the commands I know:";
   returnMsg += "\n\t";
+  returnMsg += "convert";
+  returnMsg += "\n\t";
   returnMsg += "help";
   returnMsg += "\n\t";
   returnMsg += "joke";
