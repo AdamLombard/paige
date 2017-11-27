@@ -6,7 +6,7 @@ const
   MOMENT = require('moment-timezone'),
   UUID = require('uuid');
 
-// - program constants
+// - constants
 const
   NEWLINE = "\n",
   TAB = "\t";
@@ -235,7 +235,7 @@ let unknownCommand = (cb, command) => {
 
   returnMsg  = "Hmm. :thinking_face: ";
   returnMsg += "`" + command + "` isn't a command I know. :disappointed:" + NEWLINE;
-  returnMsg += "Just type `paige` if you want to see a list of commandes I _do_ know. :nerd_face:";
+  returnMsg += "Just type `paige` if you want to see a list of commands I _do_ know. :nerd_face:";
 
   cb(null, { text: returnMsg });
 }
@@ -289,6 +289,56 @@ let convert = (cb, params, context) => {
     }
   });
 };
+
+let define = (cb, params, context) => {
+  let
+    word = params[0],
+    dictionaryAppID = context.secrets.dictionaryAppID,
+    dictionaryToken = context.secrets.dictionaryToken,
+    dictionaryAPI = context.secrets.dictionaryURL
+      + "/entries"
+      + "/en"
+      + "/" + word;
+  
+    let options = {
+      url: dictionaryAPI,
+      headers: {
+        'app_id': dictionaryAppID,
+        'app_key': dictionaryToken,
+      }
+    };
+
+    REQUEST.get(options, (error, res, body) => {
+      if (error) {
+        console.log(error);
+        cb(null, {text: "Sorry! I don't know how to do that..."} );
+      } else { 
+        let
+          returnMsg = '',
+          definitionData = JSON.parse(body),
+          lexicalEntries = definitionData.results.find(w => (w.id === word)).lexicalEntries;
+          
+        returnMsg += "_*" + word + "*_" + NEWLINE + NEWLINE;
+        
+        for (let lexicalEntry of lexicalEntries) {
+          returnMsg += "*" + lexicalEntry.lexicalCategory + "*" + NEWLINE;
+        
+          for (let entry of lexicalEntry.entries) {
+            for (let sense of entry.senses) {
+              if (sense.definitions) {
+                for (let definition of sense.definitions) {
+                  returnMsg += TAB + definition + NEWLINE;
+                }
+              }
+            }
+          }
+        }
+        
+        console.log(returnMsg);
+        cb(null, { text: returnMsg });
+      }
+    });
+}
 
 let help = (cb, params, context) => {
   let 
@@ -443,6 +493,10 @@ module.exports = (context, cb) => {
   switch (command) {
     case 'convert':
       convert(cb, params, context);
+      break;
+    
+    case 'define':
+      define(cb, params, context);
       break;
 
     case 'help':
