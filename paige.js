@@ -1,7 +1,7 @@
 "use strict";
 
 // - required external libraries and functions
-const 
+const
   REQUEST = require('request'),
   MOMENT = require('moment-timezone'),
   UUID = require('uuid');
@@ -12,7 +12,66 @@ const
   TAB = "\t";
 
 // - constant objects
-const 
+const
+  COMMANDS = [
+    {
+      id: "convert",
+      description: "Ask me to `convert` any unit of measurement into any other unit and I'll... I'll see what I can do. I'm pretty good at understanding lots of measurement abbreviations!",
+      examples: [
+        "convert 2 cups to tablespoons",
+        "convert 1 1/2 kg to lb",
+        "convert 6 pounds 7 oz to kg"
+      ]
+    },
+    {
+      id: "help",
+      description: "You can ask me for `help` with any command! (You can even ask for `help` with the `help` command, which you already know because it's the only way to read this, so... help-ception!)",
+      examples: [
+        "help weather"
+      ]
+    },
+    {
+      id: "joke",
+      description: "This is my favorite one! _Please_ ask me to tell you a `joke`. I promise that none of my jokes are terrible puns -- by which, I mean ALL of my jokes are terrible puns.",
+      examples: [
+        "joke"
+      ]
+    },
+    {
+      id: "kitten",
+      description: "OMG kittens! Ask me for a `kitten` and I'll generate a completely unique and random one, just for you. Or, you can hand me any word or sentence, and I'll make a kitten just for that phrase, and I'll remember when you ask me again later. (Slack won't show it twice back-to-back, so you may need to wait an hour to see it again.) Try asking for a kitten that matches your name!",
+      examples: [
+        "kitten",
+        "kitten santa",
+        "kitten settlers of catan"
+      ]
+    },
+    {
+      id: "robot",
+      description: "Beep-boop! Ask me for a `robot` and I'll generate a random one, just for you. Or, hand me a phrase with your robot request, and I'll make one that I'll remember and you can ask for again sometime. (Slack doesn't like showing pictures back-to-back, so you may need to wait an hour to see it again.) Try making a robot that matches your name!",
+      examples: [
+        "robot",
+        "robot santa",
+        "robot yellowstone national park"
+      ]
+    },
+    {
+      id: "roll",
+      description: "Greetings, Dungeon Master! Sometimes you just need a random roll of the die, and at those times I've got your back. Ask me to `roll`, and I'll tell you the answer for a single, random roll of a six-sided die. Or, you can ask me for any number of rolls for a die of any number of sides! Try asking me for a thousand rolls of a d20!",
+      examples: [
+        "roll",
+        "roll d20",
+        "roll 5 d6"
+      ]
+    },
+    {
+      id: "weather",
+      description: "Ask me for the `weather` for any zip code, and I'll give you the forecast there for the next 24 hours! With icons! (This isn't _super_ accurate right now, but I'm looking for a better data source, so... stay tuned!)",
+      examples: [
+        "weather 90210"
+      ]
+    }
+  ],
   JOKES = [
     {
       joke: "What's the best time to go to the dentist?",
@@ -103,64 +162,16 @@ const
       punchline: "Attire."
     }
   ],
-  COMMANDS = [
-    {
-      id: "convert",
-      description: "Ask me to `convert` any unit of measurement into any other unit and I'll... I'll see what I can do. I'm pretty good at understanding lots of measurement abbreviations!",
-      examples: [
-        "convert 2 cups to tablespoons",
-        "convert 1 1/2 kg to lb",
-        "convert 6 pounds 7 oz to kg"
-      ]
-    },
-    {
-      id: "help",
-      description: "You can ask me for `help` with any command! (You can even ask for `help` with the `help` command, which you already know because it's the only way to read this, so... help-ception!)",
-      examples: [
-        "help weather"
-      ]
-    },
-    {
-      id: "joke",
-      description: "This is my favorite one! _Please_ ask me to tell you a `joke`. I promise that none of my jokes are terrible puns -- by which, I mean ALL of my jokes are terrible puns.",
-      examples: [
-        "joke"
-      ]
-    },
-    {
-      id: "kitten",
-      description: "OMG kittens! Ask me for a `kitten` and I'll generate a completely unique and random one, just for you. Or, you can hand me any word or sentence, and I'll make a kitten just for that phrase, and I'll remember when you ask me again later. (Slack won't show it twice back-to-back, so you may need to wait an hour to see it again.) Try asking for a kitten that matches your name!",
-      examples: [
-        "kitten",
-        "kitten santa",
-        "kitten settlers of catan"
-      ]
-    },
-    {
-      id: "robot",
-      description: "Beep-boop! Ask me for a `robot` and I'll generate a random one, just for you. Or, hand me a phrase with your robot request, and I'll make one that I'll remember and you can ask for again sometime. (Slack doesn't like showing picture back-to-back, so you may need to wait an hour to see it again.) Try making a robot that matches your name!",
-      examples: [
-        "robot",
-        "robot santa",
-        "robot yellowstone national park"
-      ]
-    },
-    {
-      id: "roll",
-      description: "Greetings, Dungeon Master! Sometimes you just need a random roll of the die, and at those times I've got your back. Ask me to `roll`, and I'll tell you the answer for a single, random roll of a six-sided die. Or, you can ask me for any number of rolls for a die of any number of sides! Try asking me for a thousand rolls of a d20!",
-      examples: [
-        "roll",
-        "roll d20",
-        "roll 5 d6"
-      ]
-    },
-    {
-      id: "weather",
-      description: "Ask me for the `weather` for any zip code, and I'll give you the forecast there for the next 24 hours! With icons! (This isn't _super_ accurate right now, but I'm looking for a better data source, so... stay tuned!)",
-      examples: [
-        "weather 90210"
-      ]
-    }
+  HAPPY_EMOJIS = [
+    ":grinning:",
+    ":joy:",
+    ":joy_cat:",
+    ":laughing:",
+    ":smile:",
+    ":smiley:",
+    ":stuck_out_tongue:",
+    ":stuck_out_tongue_winking_eye:",
+    ":wink:"
   ],
   WEATHER_ICONS = {
     "d": ":cityscape:",
@@ -293,7 +304,8 @@ let help = (cb, params, context) => {
 };
 
 let joke = (cb, params, context) => {
-  let 
+  let
+    emojiIdx,
     jokeIdx,
     needsResponse = params[0],
     returnMsg = '';
@@ -312,7 +324,8 @@ let joke = (cb, params, context) => {
 
     default:
       jokeIdx = needsResponse;
-      returnMsg += JOKES[jokeIdx].punchline + ' :laughing:';
+      emojiIdx = Math.floor(Math.random()*HAPPY_EMOJIS.length);
+      returnMsg += JOKES[jokeIdx].punchline + ' ' + HAPPY_EMOJIS[emojiIdx];
 
       setTimeout(() => {cb(null, { text: returnMsg })}, 4000);
       break;
@@ -403,7 +416,6 @@ let weather = (cb, params, context) => {
     }
   });
 };
-
 
 // - bot command router
 module.exports = (context, cb) => {
