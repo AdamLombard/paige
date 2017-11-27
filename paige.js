@@ -343,6 +343,7 @@ module.exports = (context, cb) => {
     command = context.body.text.split(' ')[1],
     params = context.body.text.split(' ').slice(2);
 
+    console.log(params);
   switch (command) {
     case 'convert':
       convert(context, cb);
@@ -361,7 +362,7 @@ module.exports = (context, cb) => {
       break;
 
     case 'roll':
-      roll(cb);
+      roll(cb, params);
       break;
 
     case 'weather':
