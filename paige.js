@@ -178,16 +178,19 @@ let help = (context, cb) => {
   }
 };
 
-let joke = (context, cb) => {
-  let jokeIdx;
-  let returnMsg = '';
+let joke = (cb, params, context) => {
+  let 
+    jokeIdx,
+    needsResponse = params[0],
+    returnMsg = '';
 
-  let needsResponse = context.body.text.split(' ')[2];
+  console.log(params);
+
   switch(needsResponse) {
     case undefined:
       jokeIdx = Math.floor(Math.random()*JOKES.length);
 
-      returnMsg += context.body.trigger_word + ' joke '+ jokeIdx + ' \n';
+      returnMsg += context.body.trigger_word + " joke "+ jokeIdx + " " + NEWLINE;
       returnMsg += JOKES[jokeIdx].joke;
 
       cb(null, { text: returnMsg } );
@@ -355,7 +358,7 @@ module.exports = (context, cb) => {
       break;
 
     case 'joke':
-      joke(context, cb);
+      joke(cb, params, context);
       break;
 
     case 'kitten':
