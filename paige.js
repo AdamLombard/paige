@@ -20,7 +20,9 @@ const
       examples: [
         "convert 2 cups to tablespoons",
         "convert 1 1/2 kg to lb",
-        "convert 6 pounds 7 oz to kg"
+        "convert 6 pounds 7 oz to kg",
+        "convert 700 yen to usd",
+        "convert $1.5 to kroner"
       ]
     },
     {
