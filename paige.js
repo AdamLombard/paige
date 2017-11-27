@@ -1,131 +1,136 @@
 "use strict";
 
-const REQUEST = require('request');
-const MOMENT = require('moment-timezone');
-const UUID = require('uuid');
+// - required external libraries and functions
+const 
+  REQUEST = require('request'),
+  MOMENT = require('moment-timezone'),
+  UUID = require('uuid');
 
+// - program constants
 const
   NEWLINE = "\n",
   TAB = "\t";
 
-const JOKES = [
-  {
-    joke: "What's the best time to go to the dentist?",
-    punchline: "Tooth-hurty."
-  },
-  {
-    joke: "Did you hear about the guy who invented Lifesavers?",
-    punchline: "I hear he made a mint."
-  },
-  {
-    joke: "How do you make a Kleenex dance?",
-    punchline: "Put a little boogie in it."
-  },
-  {
-    joke: "Why don't skeletons ever go trick-or-treating?",
-    punchline: "Because they have no body to go with."
-  },
-  {
-    joke: "Did you hear about the new restaurant on the moon?",
-    punchline: "Great food, no atmosphere."
-  },
-  {
-    joke: "Don't trust atoms.",
-    punchline: "They literally make up everything."
-  },
-  {
-    joke: "What did Mrs. Buffalo say to her youngest boy when he left for college?",
-    punchline: "Bison."
-  },
-  {
-    joke: "Why is it impossible to have a nose 12 inches long?",
-    punchline: "Because it would be a foot."
-  },
-  {
-    joke: "Did you hear Scarecrow won an award?!",
-    punchline: "Yeah. He was out standing in his field."
-  },
-  {
-    joke: "Did you hear Grape got stepped on?",
-    punchline: "Yeah. He's okay, though. He just let out a little wine."
-  },
-  {
-    joke: "I hate jokes about german sausage.",
-    punchline: "They are the wurst."
-  },
-  {
-    joke: "Last night I dreamt I was a muffler.",
-    punchline: "I woke up exhausted."
-  },
-  {
-    joke: "Why can't bycicles stand on their own?",
-    punchline: "They're just two tired."
-  },
-  {
-    joke: "Why don't crabs like to share?",
-    punchline: "Because they're shellfish."
-  },
-  {
-    joke: "What do you call fake spaghetti?",
-    punchline: "Impasta!"
-  },
-  {
-    joke: "What do you call a pony with a sore throat?",
-    punchline: "A little horse."
-  },
-  {
-    joke: "What do you call cheese that isn't yours?",
-    punchline: "Nacho cheese."
-  },
-  {
-    joke: "Never get a hair cut.",
-    punchline: "If you're gonna spend money, you should get them all cut at once."
-  },
-  {
-    joke: "What does an annoying pepper do?",
-    punchline: "It gets jalapeño face."
-  },
-  {
-    joke: "Wanna hear a joke about paper?",
-    punchline: "Nevermind. It's tearable."
-  },
-  {
-    joke: "What does an annoying pepper do?",
-    punchline: "It gets jalapeño face."
-  },
-  {
-    joke: "What's the difference between a short-wearing unicyclist and suit-wearing bicyclist?",
-    punchline: "Attire."
-  }
-];
+// - constant data objects
+const 
+  JOKES = [
+    {
+      joke: "What's the best time to go to the dentist?",
+      punchline: "Tooth-hurty."
+    },
+    {
+      joke: "Did you hear about the guy who invented Lifesavers?",
+      punchline: "I hear he made a mint."
+    },
+    {
+      joke: "How do you make a Kleenex dance?",
+      punchline: "Put a little boogie in it."
+    },
+    {
+      joke: "Why don't skeletons ever go trick-or-treating?",
+      punchline: "Because they have no body to go with."
+    },
+    {
+      joke: "Did you hear about the new restaurant on the moon?",
+      punchline: "Great food, no atmosphere."
+    },
+    {
+      joke: "Don't trust atoms.",
+      punchline: "They literally make up everything."
+    },
+    {
+      joke: "What did Mrs. Buffalo say to her youngest boy when he left for college?",
+      punchline: "Bison."
+    },
+    {
+      joke: "Why is it impossible to have a nose 12 inches long?",
+      punchline: "Because it would be a foot."
+    },
+    {
+      joke: "Did you hear Scarecrow won an award?!",
+      punchline: "Yeah. He was out standing in his field."
+    },
+    {
+      joke: "Did you hear Grape got stepped on?",
+      punchline: "Yeah. He's okay, though. He just let out a little wine."
+    },
+    {
+      joke: "I hate jokes about german sausage.",
+      punchline: "They are the wurst."
+    },
+    {
+      joke: "Last night I dreamt I was a muffler.",
+      punchline: "I woke up exhausted."
+    },
+    {
+      joke: "Why can't bycicles stand on their own?",
+      punchline: "They're just two tired."
+    },
+    {
+      joke: "Why don't crabs like to share?",
+      punchline: "Because they're shellfish."
+    },
+    {
+      joke: "What do you call fake spaghetti?",
+      punchline: "Impasta!"
+    },
+    {
+      joke: "What do you call a pony with a sore throat?",
+      punchline: "A little horse."
+    },
+    {
+      joke: "What do you call cheese that isn't yours?",
+      punchline: "Nacho cheese."
+    },
+    {
+      joke: "Never get a hair cut.",
+      punchline: "If you're gonna spend money, you should get them all cut at once."
+    },
+    {
+      joke: "What does an annoying pepper do?",
+      punchline: "It gets jalapeño face."
+    },
+    {
+      joke: "Wanna hear a joke about paper?",
+      punchline: "Nevermind. It's tearable."
+    },
+    {
+      joke: "What does an annoying pepper do?",
+      punchline: "It gets jalapeño face."
+    },
+    {
+      joke: "What's the difference between a short-wearing unicyclist and suit-wearing bicyclist?",
+      punchline: "Attire."
+    }
+  ],
+  COMMANDS = [
+    {
+      id: "convert",
+      description: "Ask me to `convert` any unit of measurement into any other unit and I'll... I'll see what I can do. I'm pretty good at understanding lots of measurement abbreviations!",
+      examples: [
+        "`convert` 2 cups to tablespoons",
+        "`convert` 1 1/2 kg to lb",
+        "`convert` 6 pounds 7 oz to kg"
+      ]
+    },
+    {
+      id: "help"
+    },
+    {
+      id: "joke"
+    },
+    {
+      id: "kitten"
+    },
+    {
+      id: "roll"
+    },
+    {
+      id: "weather"
+    }
+  ];
 
-const COMMANDS = [
-  {
-    id: "convert",
-    description: "Ask me to `convert` any unit of measurement into any other unit and I'll... I'll see what I can do. I'm pretty good at understanding lots of measurement abbreviations!",
-    examples: [
-      "`convert` 2 cups to tablespoons",
-      "`convert` 1 1/2 kg to lb",
-      "`convert` 6 pounds 7 oz to kg"
-    ]
-  },
-  {
-    id: "help"
-  },
-  {
-    id: "joke"
-  },
-  {
-    id: "kitten"
-  },
-  {
-    id: "roll"
-  },
-  {
-    id: "weather"
-  }
-];
-
+// - helper functions
 let hashedStr = (s) => {
   let hashedStr = '',
       char;
@@ -137,6 +142,7 @@ let hashedStr = (s) => {
   return hashedStr;
 };
 
+// - bot commands
 let convert = (context, cb) => {
   let conversionRequest = context.body.text.split(' ').slice(2).join('+');
   let conversionAPI = context.secrets.conversionURL
@@ -329,6 +335,8 @@ let weather = (context, cb) => {
   });
 };
 
+
+// - bot command router
 module.exports = (context, cb) => {
   let command = context.body.text.split(' ')[1];
 
