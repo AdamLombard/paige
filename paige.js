@@ -4,6 +4,10 @@ const REQUEST = require('request');
 const MOMENT = require('moment-timezone');
 const UUID = require('uuid');
 
+const
+  NEWLINE = "\n",
+  TAB = "\t";
+
 const JOKES = [
   {
     joke: "What's the best time to go to the dentist?",
@@ -97,22 +101,28 @@ const JOKES = [
 
 const COMMANDS = [
   {
-    command: "convert"
+    id: "convert",
+    description: "Ask me to `convert` any unit of measurement into any other unit and I'll... I'll see what I can do. I'm pretty good at understanding lots of measurement abbreviations!",
+    examples: [
+      "`convert` 2 cups to tablespoons",
+      "`convert` 1 1/2 kg to lb",
+      "`convert` 6 pounds 7 oz to kg"
+    ]
   },
   {
-    command: "help"
+    id: "help"
   },
   {
-    command: "joke"
+    id: "joke"
   },
   {
-    command: "kitten"
+    id: "kitten"
   },
   {
-    command: "roll"
+    id: "roll"
   },
   {
-    command: "weather"
+    id: "weather"
   }
 ];
 
@@ -149,25 +159,15 @@ let convert = (context, cb) => {
 };
 
 let help = (context, cb) => {
-  const 
-    NEWLINE = "\n",
-    TAB = "\t";
-
   let returnMsg = "";
-  returnMsg  = "Hi! I'm Paige!" + NEWLINE;
-  returnMsg += NEWLINE;
-  returnMsg += "To get my help, type `paige <command> <details>`." + NEWLINE;
-  returnMsg += NEWLINE;
-  returnMsg += "Here are the commands I know:" + NEWLINE;
 
-  for (let command of COMMANDS) {
-    returnMsg += TAB + command.command + NEWLINE;
+  if (context.body.text.split(' ')[2]) {
+    returnMsg  = "Here we go!";
+
+    cb(null, { text: returnMsg });
+  } else {
+    
   }
-
-  returnMsg += NEWLINE;
-  returnMsg += "So, if you type `paige joke`, I'll tell you one! Try it! :smile:";
-
-  cb(null, { text: returnMsg });
 };
 
 let joke = (context, cb) => {
@@ -211,6 +211,25 @@ let kitten = (context, cb) => {
     
   cb(null, { text: kittenAPI });
 };
+
+let paige = (context, cb) => {
+  let returnMsg = "";
+  returnMsg  = "";
+  returnMsg  = "Hi! I'm Paige!" + NEWLINE;
+  returnMsg += NEWLINE;
+  returnMsg += "To get my assistance, type `paige <command> <details>`." + NEWLINE;
+  returnMsg += NEWLINE;
+  returnMsg += "Here are the commands I know:" + NEWLINE;
+
+  for (let command of COMMANDS) {
+    returnMsg += TAB + command.id + NEWLINE;
+  }
+
+  returnMsg += NEWLINE;
+  returnMsg += "If you type `paige help <command>`, I'll tell you more about a specific command. Try it! :smile:";
+
+  cb(null, { text: returnMsg });
+}
 
 let roll = (context, cb) => {
   let 
@@ -339,6 +358,6 @@ module.exports = (context, cb) => {
       break;
 
     default:
-      help(context, cb);
+      paige(context, cb);
   }
 };
