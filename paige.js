@@ -152,7 +152,47 @@ const
         "weather 90210"
       ]
     }
-  ];
+  ],
+  WEATHER_ICONS = {
+    "d": ":cityscape:",
+    "n": ":night_with_stars:",
+    
+    // clear sky
+    "01d": ":sunny:",
+    "01n": ":night_with_stars:",
+    
+    // few clouds
+    "02d": ":partly_sunny:",
+    "02n": ":cloud:",
+    
+    // scattered clouds
+    "03d": ":barely_sunny:",
+    "03n": ":cloud:",
+    
+    // broken clouds
+    "04d": ":cloud:",
+    "04n": ":cloud:",
+    
+    // shower rain
+    "09d": ":partly_sunny_rain:",
+    "09n": ":rain_cloud:",
+    
+    // rain
+    "10d": ":rain_cloud:",
+    "10n": ":rain_cloud:",
+    
+    // thunderstorm
+    "11d": ":lightning:",
+    "11n": ":lightning:",
+    
+    // snow
+    "13d": ":snowflake:",
+    "13n": ":snowflake:",
+    
+    // mist
+    "50d": ":fog:",
+    "50n": ":fog:"
+  };
 
 // - helper functions
 let hashedStr = (s) => {
@@ -242,22 +282,32 @@ let joke = (cb, params, context) => {
   }
 };
 
-let kitten = (cb, params, context) => {
-  let kittenAPI,
-      kittenID,
+let creature = (cb, params, context, command) => {
+  let creatureAPI,
+      creatureID,
+      creatureSet,
       seedString = params.join('');
   
   if (seedString) {
-    kittenID = hashedStr(seedString);
+    creatureID = hashedStr(seedString);
   } else {
-    kittenID = UUID();
+    creatureID = UUID();
   }
-  
-  kittenAPI = context.secrets.kittenURL
-    + kittenID + '.png?'
-    + 'set=set4';
+
+  switch (command) {
+    case 'kitten':
+      creatureSet = 'set4';
+      break;
+
+    case 'robot':
+      creatureSet = 'set1';
+      break;
+  }
+  creatureAPI = context.secrets.creatureURL
+    + creatureID + '.png?'
+    + 'set=' + creatureSet;
     
-  cb(null, { text: kittenAPI });
+  cb(null, { text: creatureAPI });
 };
 
 let paige = (cb) => {
@@ -322,47 +372,6 @@ let weather = (cb, params, context) => {
     } else {
       let weatherData = JSON.parse(body);
 
-      let icons = {
-        "d": ":cityscape:",
-        "n": ":night_with_stars:",
-        
-        // clear sky
-        "01d": ":sunny:",
-        "01n": ":night_with_stars:",
-        
-        // few clouds
-        "02d": ":partly_sunny:",
-        "02n": ":cloud:",
-        
-        // scattered clouds
-        "03d": ":barely_sunny:",
-        "03n": ":cloud:",
-        
-        // broken clouds
-        "04d": ":cloud:",
-        "04n": ":cloud:",
-        
-        // shower rain
-        "09d": ":partly_sunny_rain:",
-        "09n": ":rain_cloud:",
-        
-        // rain
-        "10d": ":rain_cloud:",
-        "10n": ":rain_cloud:",
-        
-        // thunderstorm
-        "11d": ":lightning:",
-        "11n": ":lightning:",
-        
-        // snow
-        "13d": ":snowflake:",
-        "13n": ":snowflake:",
-        
-        // mist
-        "50d": ":fog:",
-        "50n": ":fog:"
-      };
-
       let forecasts = weatherData.list;
       let returnMsg = "Here's the weather for the next 24 hours in ";
       returnMsg += weatherData.city.name + "!";
@@ -377,7 +386,7 @@ let weather = (cb, params, context) => {
         returnMsg += "\n\t";
         returnMsg += dayAndTime;
         returnMsg += "\n\t\t";
-        returnMsg += icons[weatherIconCode] + "\t";
+        returnMsg += WEATHER_ICONS[weatherIconCode] + "\t";
         returnMsg += cTemp + "°C (" + fTemp +"°F) with " + weatherDescription;
       }
 
@@ -407,7 +416,11 @@ module.exports = (context, cb) => {
       break;
 
     case 'kitten':
-      kitten(cb, params, context);
+      creature(cb, params, context, command);
+      break;
+
+    case 'robot':
+      creature(cb, params, context, command);
       break;
 
     case 'roll':
