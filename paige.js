@@ -281,19 +281,24 @@ let paige = (cb) => {
 
 let roll = (cb, params) => {
   let 
-    numOfDice = params[0],
-    typeOfDie = params[1],
+    numOfDice = 1,
+    typeOfDie = 'd6',
     rolledDice = [];
 
-  if (!numOfDice) {
-    numOfDice = 'd6'
+  switch (true) {
+    case (!params[0] && !params[1]):
+      break;
+
+    case (params[0] && !params[1]):
+      typeOfDie = params[0];
+      break;
+
+    default:
+      numOfDice = params[0];
+      typeOfDie = params[1];
+      break;
   }
 
-  if (numOfDice[0].toLowerCase() === 'd') {
-    typeOfDie = numOfDice;
-    numOfDice = 1;
-  }
-  
   let sizeOfDie = typeOfDie.slice(1);
   for (let i = 0; i < numOfDice; i++) {
     rolledDice.push(' ' + Math.ceil(Math.random() * sizeOfDie));
