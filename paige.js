@@ -26,6 +26,13 @@ const
       ]
     },
     {
+      id: "define",
+      description: "Ask me to `define` a word, and I will! I know all the words...",
+      examples: [
+        "define book"
+      ]
+    },
+    {
       id: "help",
       description: "You can ask me for `help` with any command! (You can even ask for `help` with the `help` command, which you already know because it's the only way to read this, so... help-ception!)",
       examples: [
