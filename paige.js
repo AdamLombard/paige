@@ -137,6 +137,15 @@ const
       ]
     },
     {
+      id: "robot",
+      description: "Beep-boop! Ask me for a `robot` and I'll generate a random one, just for you. Or, hand me a phrase with your robot request, and I'll make one that I'll remember and you can ask for again sometime. (Slack doesn't like showing picture back-to-back, so you may need to wait an hour to see it again.) Try making a robot that matches your name!",
+      examples: [
+        "robot",
+        "robot santa",
+        "robot yellowstone national park"
+      ]
+    },
+    {
       id: "roll",
       description: "Greetings, Dungeon Master! Sometimes you just need a random roll of the die, and at those times I've got your back. Ask me to `roll`, and I'll tell you the answer for a single, random roll of a six-sided die. Or, you can ask me for any number of rolls for a die of any number of sides! Try asking me for a thousand rolls of a d20!",
       examples: [
@@ -208,6 +217,34 @@ let hashedStr = (s) => {
 };
 
 // - bot commands
+let creature = (cb, params, context, command) => {
+  let creatureAPI,
+      creatureID,
+      creatureSet,
+      seedString = params.join('');
+  
+  if (seedString) {
+    creatureID = hashedStr(seedString);
+  } else {
+    creatureID = UUID();
+  }
+
+  switch (command) {
+    case 'kitten':
+      creatureSet = 'set4';
+      break;
+
+    case 'robot':
+      creatureSet = 'set1';
+      break;
+  }
+  creatureAPI = context.secrets.creatureURL
+    + creatureID + '.png?'
+    + 'set=' + creatureSet;
+    
+  cb(null, { text: creatureAPI });
+};
+
 let convert = (cb, params, context) => {
   let conversionRequest = params.join('+');
   let conversionAPI = context.secrets.conversionURL
@@ -280,34 +317,6 @@ let joke = (cb, params, context) => {
       setTimeout(() => {cb(null, { text: returnMsg })}, 4000);
       break;
   }
-};
-
-let creature = (cb, params, context, command) => {
-  let creatureAPI,
-      creatureID,
-      creatureSet,
-      seedString = params.join('');
-  
-  if (seedString) {
-    creatureID = hashedStr(seedString);
-  } else {
-    creatureID = UUID();
-  }
-
-  switch (command) {
-    case 'kitten':
-      creatureSet = 'set4';
-      break;
-
-    case 'robot':
-      creatureSet = 'set1';
-      break;
-  }
-  creatureAPI = context.secrets.creatureURL
-    + creatureID + '.png?'
-    + 'set=' + creatureSet;
-    
-  cb(null, { text: creatureAPI });
 };
 
 let paige = (cb) => {
