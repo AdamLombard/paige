@@ -168,8 +168,8 @@ let hashedStr = (s) => {
 };
 
 // - bot commands
-let convert = (context, cb) => {
-  let conversionRequest = context.body.text.split(' ').slice(2).join('+');
+let convert = (cb, params, context) => {
+  let conversionRequest = params.join('+');
   let conversionAPI = context.secrets.conversionURL
     + 'input=' + conversionRequest
     + '&format=plaintext'
@@ -390,7 +390,7 @@ module.exports = (context, cb) => {
 
   switch (command) {
     case 'convert':
-      convert(context, cb);
+      convert(cb, params, context);
       break;
 
     case 'help':
