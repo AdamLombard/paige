@@ -245,10 +245,10 @@ let joke = (cb, params, context) => {
 let kitten = (cb, params, context) => {
   let kittenAPI,
       kittenID,
-      seedWord = params[0];
+      seedString = params.join('');
   
-  if (seedWord) {
-    kittenID = hashedStr(seedWord);
+  if (seedString) {
+    kittenID = hashedStr(seedString);
   } else {
     kittenID = UUID();
   }
