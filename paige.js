@@ -238,11 +238,10 @@ let paige = (cb) => {
   cb(null, { text: returnMsg });
 }
 
-let roll = (context, cb) => {
+let roll = (cb, params) => {
   let 
-    rollParams = context.body.text.split(' ').slice(2),
-    numOfDice = rollParams[0],
-    typeOfDie = rollParams[1],
+    numOfDice = params[0],
+    typeOfDie = params[1],
     rolledDice = [];
 
   if (numOfDice[0].toLowerCase() === 'd') {
@@ -362,7 +361,7 @@ module.exports = (context, cb) => {
       break;
 
     case 'roll':
-      roll(context, cb);
+      roll(cb);
       break;
 
     case 'weather':
