@@ -229,6 +229,17 @@ let hashedStr = (s) => {
   return hashedStr;
 };
 
+let unknownCommand = (cb, command) => {
+  let
+    returnMsg;
+
+  returnMsg  = "Hmm. :thinking_face: ";
+  returnMsg += "`" + command + "` isn't a command I know. :disappointed:" + NEWLINE;
+  returnMsg += "Just type `paige` if you want to see a list of commandes I _do_ know. :nerd_face:";
+
+  cb(null, { text: returnMsg });
+}
+
 // - bot commands
 let creature = (cb, params, context, command) => {
   let creatureAPI,
@@ -288,18 +299,22 @@ let help = (cb, params, context) => {
     let 
       commandInfo = COMMANDS.find(c => (c.id === command));
 
-    returnMsg += "Sure! Here's some info on the `"+ command + "` command:" + NEWLINE;
-    returnMsg += NEWLINE;
-    returnMsg += "DESCRIPTION:" + NEWLINE;
-    returnMsg += commandInfo.description + NEWLINE;
-    returnMsg += NEWLINE;
-    returnMsg += "EXAMPLES:" + NEWLINE;
+    if (commandInfo) {
+      returnMsg += "Sure! Here's some info on the `"+ command + "` command:" + NEWLINE;
+      returnMsg += NEWLINE;
+      returnMsg += "DESCRIPTION:" + NEWLINE;
+      returnMsg += commandInfo.description + NEWLINE;
+      returnMsg += NEWLINE;
+      returnMsg += "EXAMPLES:" + NEWLINE;
 
-    for (let example of commandInfo.examples) {
-      returnMsg += TAB + "`" + context.body.trigger_word + " " + example + "`" + NEWLINE;
+      for (let example of commandInfo.examples) {
+        returnMsg += TAB + "`" + context.body.trigger_word + " " + example + "`" + NEWLINE;
+      }
+
+      cb(null, { text: returnMsg } );
+    } else {
+      unknownCommand(cb, command);
     }
-
-    cb(null, { text: returnMsg } );
   } else {
     paige(cb);
   }
@@ -454,7 +469,12 @@ module.exports = (context, cb) => {
       weather(cb, params, context);
       break;
 
-    default:
+    case undefined:
       paige(cb);
+      break;
+
+    default:
+      unknownCommand(cb, command);
+      break;
   }
 };
