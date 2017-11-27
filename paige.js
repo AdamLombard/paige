@@ -11,7 +11,7 @@ const
   NEWLINE = "\n",
   TAB = "\t";
 
-// - constant data objects
+// - constant objects
 const 
   JOKES = [
     {
@@ -285,6 +285,10 @@ let roll = (cb, params) => {
     typeOfDie = params[1],
     rolledDice = [];
 
+  if (!numOfDice) {
+    numOfDice = 'd6'
+  }
+
   if (numOfDice[0].toLowerCase() === 'd') {
     typeOfDie = numOfDice;
     numOfDice = 1;
@@ -384,7 +388,6 @@ module.exports = (context, cb) => {
     command = context.body.text.split(' ')[1],
     params = context.body.text.split(' ').slice(2);
 
-    console.log(params);
   switch (command) {
     case 'convert':
       convert(context, cb);
