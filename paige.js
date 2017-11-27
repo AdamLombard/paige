@@ -201,10 +201,10 @@ let joke = (context, cb) => {
   }
 };
 
-let kitten = (context, cb) => {
+let kitten = (cb, params, context) => {
   let kittenAPI,
       kittenID,
-      seedWord = context.body.text.split(' ')[2];
+      seedWord = params[0];
   
   if (seedWord) {
     kittenID = hashedStr(seedWord);
@@ -358,7 +358,7 @@ module.exports = (context, cb) => {
       break;
 
     case 'kitten':
-      kitten(context, cb);
+      kitten(cb, params, context);
       break;
 
     case 'roll':
