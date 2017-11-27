@@ -132,8 +132,9 @@ const
 
 // - helper functions
 let hashedStr = (s) => {
-  let hashedStr = '',
-      char;
+  let
+    char,
+    hashedStr = '';
 
   for (char of s) {
     hashedStr += char.charCodeAt();
