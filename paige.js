@@ -165,7 +165,8 @@ let convert = (context, cb) => {
 };
 
 let help = (context, cb) => {
-  let returnMsg = "";
+  let 
+    returnMsg = "";
 
   if (context.body.text.split(' ')[2]) {
     returnMsg  = "Here we go!";
@@ -218,7 +219,7 @@ let kitten = (context, cb) => {
   cb(null, { text: kittenAPI });
 };
 
-let paige = (context, cb) => {
+let paige = (cb) => {
   let returnMsg = "";
   returnMsg  = "";
   returnMsg  = "Hi! I'm Paige!" + NEWLINE;
@@ -257,12 +258,13 @@ let roll = (context, cb) => {
   cb(null, { text: rolledDice.toString() });
 };
 
-let weather = (context, cb) => {
-  let location = context.body.text.split(' ')[2];
-  let weatherAPI = context.secrets.weatherURL
-    + 'forecast?'
-    + 'zip=' + location
-    + '&appid=' + context.secrets.weatherToken;
+let weather = (cb, params, context) => {
+  let 
+    location = params[0],
+    weatherAPI = context.secrets.weatherURL
+      + 'forecast?'
+      + 'zip=' + location
+      + '&appid=' + context.secrets.weatherToken;
 
   REQUEST.get(weatherAPI, (error, res, body) => {
     if (error) {
@@ -338,7 +340,9 @@ let weather = (context, cb) => {
 
 // - bot command router
 module.exports = (context, cb) => {
-  let command = context.body.text.split(' ')[1];
+  let 
+    command = context.body.text.split(' ')[1],
+    params = context.body.text.split(' ').slice(2);
 
   switch (command) {
     case 'convert':
@@ -362,10 +366,10 @@ module.exports = (context, cb) => {
       break;
 
     case 'weather':
-      weather(context, cb);
+      weather(cb, params, context);
       break;
 
     default:
-      paige(context, cb);
+      paige(cb);
   }
 };
